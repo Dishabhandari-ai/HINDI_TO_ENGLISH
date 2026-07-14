@@ -16,7 +16,7 @@ class HindiOCR:
     def recognize(self, image_path):
 
        
-        image = Image.open(image_path)
+        image = Image.open(image_path).convert("L")
 
         
         # OEM 3 -> Best available engine
