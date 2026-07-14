@@ -1,44 +1,44 @@
-import torch
-
+import pytesseract
 from PIL import Image
-
-from transformers import (
-    TrOCRProcessor,
-    VisionEncoderDecoderModel
-)
 
 
 class HindiOCR:
 
     def __init__(self):
 
-        print("Loading TrOCR model...")
+        
+        pytesseract.pytesseract.tesseract_cmd = (
+            r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        )
 
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model_name = "paudelanil/trocr-devanagari-2"
-        self.processor = TrOCRProcessor.from_pretrained(self.model_name)
-        self.model = VisionEncoderDecoderModel.from_pretrained(self.model_name).to(self.device)
-        self.model.eval()
-        print(f"Using device: {self.device}")
-        print("Model Loaded Successfully!")
+        print("Hindi OCR Initialized Successfully!")
 
     def recognize(self, image_path):
 
-        print(f"\nReading image: {image_path}")
+       
+        image = Image.open(image_path)
 
-        image = Image.open(image_path).convert("RGB")
+        
+        # OEM 3 -> Best available engine
+        # PSM 8 -> Treat image as a single word
+        custom_config = r'--oem 3 --psm 8'
 
-        pixel_values = self.processor(
+        text = pytesseract.image_to_string(
             image,
-            return_tensors="pt"
-        ).pixel_values
+            lang="hin",
+            config=custom_config
+        )
 
-        print("Tensor Shape:", pixel_values.shape)
+      
+        text = text.strip()
 
-        pixel_values = pixel_values.to(self.device)
+        return text
+
 
 if __name__ == "__main__":
 
     ocr = HindiOCR()
 
-    ocr.recognize("outputs/processed_sample1.png")   
+    result = ocr.recognize("outputs/processed_sample2.png")
+
+    print("Recognized Text:", result)

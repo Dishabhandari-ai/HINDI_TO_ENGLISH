@@ -57,14 +57,14 @@ def preprocess_image(input_path, output_path):
 
 if __name__ == "__main__":
 
-    output = preprocess_image(
-        "uploads/imgsample1.jpg",
-        "outputs/processed_sample1.png"
+    output2 = preprocess_image(
+        "uploads/imgsample2.jpg",
+        "outputs/processed_sample2.png"
     )
 
-    print(output)
+    print(output2)
 
-    img = cv2.imread(output)
+    img = cv2.imread(output2)
 
     cv2.imshow("Processed", img)
 
